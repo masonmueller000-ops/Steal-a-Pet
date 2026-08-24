@@ -1,0 +1,34 @@
+name: Fix sprite clipping
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-sprite-clipping.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch sprite renderer
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = "ctx.drawImage(sheet,a[0],a[1],48,48,-24*size,-24*size,48*size,48*size)"
+          new = "ctx.drawImage(sheet,a[0]+2,a[1]+2,44,44,-24*size,-24*size,48*size,48*size)"
+          if old not in s:
+              raise SystemExit('Target sprite draw call not found; no change made.')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Fix sprite sheet edge clipping'
+          git push
