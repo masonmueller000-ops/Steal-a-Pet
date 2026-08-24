@@ -7,7 +7,7 @@
 <div id="message" class="panel msg"></div><div class="panel help">A/D or ←/→ = move. W/S or ↑/↓ = move through the stacked worlds. <b>E</b> = steal/hatch. Mothers chase you after you steal. Get back to the blue safe zone!</div><div class="panel petList"><b>🐾 PLOT PETS</b><div id="pets"></div></div></div>
 <script>
 const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');let W=innerWidth,H=innerHeight,dpr=1;function resize(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
-const SPRITE='/steal-a-pet/sprites.png';const sheet=new Image();sheet.src=SPRITE;
+const SPRITE='sprites.png';const sheet=new Image();sheet.src=SPRITE;
 const worlds=[
 {name:'Meadow',mother:'Cow',bg:'#76bd65',sky:'#b9edff',egg:'#f3df8a',hatch:8,pet:[['Bunny',1,75,0.8],['Cow',3,20,1.1],['Golden Bunny',9,5,0.9]]},
 {name:'Forest',mother:'Wolf',bg:'#4b8d5b',sky:'#91d5d1',egg:'#9bd080',hatch:15,pet:[['Fox',5,65,1],['Wolf Pup',10,30,1.15],['Forest Spirit',28,5,1.35]]},
@@ -16,7 +16,7 @@ const worlds=[
 {name:'Cosmos',mother:'Void Beast',bg:'#51479a',sky:'#887ed5',egg:'#d0b7ff',hatch:60,pet:[['Void Cat',100,65,0.9],['Void Wolf',210,30,1.25],['Cosmic Beast',750,5,1.8]]}
 ];
 const VIEW_W=960,VIEW_H=540,plotH=155,safeH=75,worldH=360,worldGap=25,worldW=900,worldTop=plotH+safeH;const totalH=worldTop+worlds.length*(worldH+worldGap)+100;
-const player={x:480,y:worldTop+worlds.length*(worldH+worldGap)+25,screenY:VIEW_H-115};let worldScroll=0;let keys={};let last=performance.now();
+const player={x:480,y:worldTop+worlds.length*(worldH+worldGap)+25,screenY:VIEW_H/2};let worldScroll=0;let keys={};let last=performance.now();
 let game={cash:100,capacity:3,speedLevel:0,pets:[],equipped:[],egg:null,lastReset:Date.now()};try{game=Object.assign(game,JSON.parse(localStorage.getItem('stealAPet2D')||'{}'))}catch(e){}
 let mothers=[],eggs=[],petsOnPlot=[];
 function save(){localStorage.setItem('stealAPet2D',JSON.stringify(game))}function msg(t){const e=document.getElementById('message');e.textContent=t;e.style.display='block';clearTimeout(msg.t);msg.t=setTimeout(()=>e.style.display='none',2400)}
